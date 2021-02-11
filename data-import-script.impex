@@ -1,0 +1,118 @@
+## Payment Info
+SELECT {c.pk}
+	FROM {PaymentInfo as pi
+    	JOIN Order as o on {o.paymentInfo} = {pi.pk} 
+        JOIN Customer as c on {c.pk} = {o.user}}
+    WHERE {c.uid} = 'user@user.com'  
+
+## Credit Card Payment Info
+SELECT {ccpi.pk}
+	FROM {CreditCardPaymentInfo as ccpi
+    	JOIN Order as o on {o.paymentInfo} = {ccpi.pk}
+        JOIN Customer as c on {c.pk} = {o.user}}
+    WHERE {c.uid} = 'user@user.com'  
+
+
+## Billing Address
+
+SELECT {c.pk}
+	FROM {PaymentInfo as pi
+    	JOIN Address as a on {a.pk} = {pi.billingaddress}
+    	JOIN Order as o on {o.paymentInfo} = {pi.pk}
+        JOIN Customer as c on {c.pk} = {o.user}}
+    WHERE {c.uid} = 'user@user.com'  
+
+#########################
+
+SELECT {oe:PK}, {pt:pk} FROM
+ {
+    ORDERENTRY as oe JOIN PaymentTransactionAbstractOrderEntryRelation as rel
+    ON {oe:PK} = {rel:target}
+    JOIN paymentTransaction AS pt
+    ON {rel:source} = {pt:PK}
+ }
+WHERE {oe.order} = '8796093120557'
+####################################
+SELECT {pt:pk} 
+    FROM
+    {
+        ORDERENTRY as oe 
+            JOIN PaymentTransactionAbstractOrderEntryRelation as rel
+                ON {oe:PK} = {rel:target}
+            JOIN paymentTransaction AS pt
+                ON {rel:source} = {pt:PK}
+            JOIN Order as o 
+                ON {o.pk} = {oe.order}
+            JOIN Customer as c
+                ON {c.pk} = {o.user}
+    }
+   WHERE {c.uid} = 'user@user.com'
+
+
+#########################################
+Payment Transaction for an order
+
+SELECT DISTINCT {pt:pk} 
+    FROM
+    {
+        ORDERENTRY as oe 
+            JOIN PaymentTransactionAbstractOrderEntryRelation as rel
+                ON {oe:PK} = {rel:target}
+            JOIN paymentTransaction AS pt
+                ON {rel:source} = {pt:PK}
+            JOIN Order as o 
+                ON {o.pk} = {oe.order}
+            JOIN Customer as c
+                ON {c.pk} = {o.user}
+    }
+   WHERE {c.uid} = 'user@user.com'
+
+####################################
+CONSIGNMENT
+
+SELECT * 
+	FROM {CONSIGNMENT AS CG
+    	JOIN ORDER AS O 
+        	ON {O.PK} = {CG.ORDER}
+        JOIN CUSTOMER AS C 
+        	ON {C.PK} = {O.USER}
+    }
+    WHERE {C.UID} = 'user@user.com'
+
+#####################################
+ORDER-PROCESS
+
+SELECT {OP.PK}, {O.CODE}
+	FROM {ORDERPROCESS AS OP
+    	JOIN ORDER AS O 
+        	ON {O.PK} = {OP.ORDER}
+        JOIN CUSTOMER AS C
+        	ON {C.PK} = {O.USER}
+    }
+    WHERE {C.UID} = 'user@user.com'
+########################################
+Consignment-Entry
+
+SELECT {CE.PK}
+	FROM {CONSIGNMENTENTRY AS CE
+    	JOIN CONSIGNMENT AS C
+        	ON {C.PK} = {CE.CONSIGNMENT}
+        JOIN ORDER AS O
+        	ON {O.PK} = {C.ORDER}
+       	JOIN Customer as c
+            ON {c.pk} = {O.user}     
+    }
+    WHERE {c.uid} = 'user@user.com'
+#############################################
+User’s paymentInfo
+
+SELECT {PI.PK} 
+	FROM {PAYMENTINFO AS PI
+    	JOIN CUSTOMER AS C 
+        	ON {C.PK} = {PI.USER}
+        JOIN ORDER AS O
+        	ON {C.PK} = {O.USER}
+    }
+    WHERE {C.UID} = 'user@user.com'
+    
+
